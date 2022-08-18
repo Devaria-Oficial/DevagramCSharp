@@ -1,8 +1,10 @@
 ﻿using DevagramCSharp.Dtos;
 using DevagramCSharp.Models;
 using DevagramCSharp.Services;
+using DevagramCSharp.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DevagramCSharp.Utils;
 
 namespace DevagramCSharp.Controllers
 {
@@ -12,10 +14,12 @@ namespace DevagramCSharp.Controllers
     {
 
         private readonly ILogger<LoginController> _logger;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public LoginController (ILogger<LoginController> logger)
+        public LoginController (ILogger<LoginController> logger, IUsuarioRepository usuarioRepository)
         {
             _logger = logger;
+            _usuarioRepository = usuarioRepository;
         }
 
         [HttpPost]
@@ -27,25 +31,19 @@ namespace DevagramCSharp.Controllers
                 if(!String.IsNullOrEmpty(loginrequisicao.Senha) && !String.IsNullOrEmpty(loginrequisicao.Email) &&
                     !String.IsNullOrWhiteSpace(loginrequisicao.Senha) && !String.IsNullOrWhiteSpace(loginrequisicao.Email))
                 {
-                    string email = "daniel@devaria.com.br";
-                    string senha = "Senha@123";
 
-                    if(loginrequisicao.Email == email && loginrequisicao.Senha == senha)
+                    Usuario usuario = _usuarioRepository.GetUsuarioPorLoginSenha(loginrequisicao.Email.ToLower(), MD5Utils.GerarHashMD5(loginrequisicao.Senha));
+
+                    if(usuario != null)
                     {
-                        Usuario usuario = new Usuario()
-                        {
-                            Email = loginrequisicao.Email,
-                            Id = 12,
-                            Nome = "Daniel Castello"
-                        };
-
                         return Ok(new LoginRespostaDto()
                         {
                             Email = usuario.Email,
                             Nome = usuario.Nome,
                             Token = TokenService.CriarToken(usuario)
                         });
-                    }else
+                    }
+                    else
                     {
                         return BadRequest(new ErrorRespostaDto()
                         {
@@ -53,6 +51,7 @@ namespace DevagramCSharp.Controllers
                             Status = StatusCodes.Status400BadRequest
                         });
                     }
+
                 }
                 else
                 {

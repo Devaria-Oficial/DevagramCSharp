@@ -18,6 +18,7 @@ namespace DevagramCSharp.Controllers
         {
             _logger = logger;
             _publicacaoRepository = publicacaoRepository;
+            
         }
 
         [HttpPost]
@@ -62,6 +63,14 @@ namespace DevagramCSharp.Controllers
                     Status = StatusCodes.Status500InternalServerError
                 });
             }
+        }
+
+        [HttpGet]
+        public IActionResult Feed()
+        {
+            List<FeedRespostaDto> feed = _publicacaoRepository.GetFeed(LerToken().Id);
+
+            return Ok(feed);
         }
 
     }

@@ -6,6 +6,6 @@ namespace DevagramCSharp.Repository
     public interface IPublicacaoRepository
     {
         public void Publicar(Publicacao publicacao);
-        List<FeedRespostaDto> GetFeed(int idUsuario);
+        List<PublicacaoFeedRespostaDto> GetPublicacoesFeed(int idUsuario);
     }
 }

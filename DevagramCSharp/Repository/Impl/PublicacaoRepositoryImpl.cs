@@ -47,6 +47,11 @@ namespace DevagramCSharp.Repository.Impl
             return feedusuario.ToList();
         }
 
+        public int GetQtdePublicacoes(int idUsuario)
+        {
+            return _context.Publicacoes.Count(p => p.IdUsuario == idUsuario);
+        }
+
         public void Publicar(Publicacao publicacao)
         {
             _context.Add(publicacao);

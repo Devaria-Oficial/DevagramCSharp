@@ -10,6 +10,6 @@ namespace DevagramCSharp.Repository
         Usuario GetUsuarioPorLoginSenha(string email, string senha);
         Usuario GetUsuarioPorId(int id);
         public void AtualizarUsuario (Usuario usuario);
-
+        List<Usuario> GetUsuarioNome(string nome);
     }
 }
